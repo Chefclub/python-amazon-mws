@@ -28,6 +28,7 @@ __all__ = [
     'Feeds',
     'Inventory',
     'InboundShipments',
+    "OutboundShipments",
     'MWSError',
     'Reports',
     'Orders',
@@ -1300,13 +1301,93 @@ class Inventory(MWS):
 class OutboundShipments(MWS):
     """
     Amazon MWS Fulfillment Outbound Shipments API
+    Docs:
+    http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_Overview.html
     """
+
     URI = "/FulfillmentOutboundShipment/2010-10-01"
     VERSION = "2010-10-01"
-    NEXT_TOKEN_OPERATIONS = [
-        'ListAllFulfillmentOrders',
-    ]
-    # TODO: Complete this class section
+    NEXT_TOKEN_OPERATIONS = ["ListAllFulfillmentOrders"]
+
+    # TODO: Complete these methods
+    def get_fulfillment_preview(self):
+        """
+        Returns a list of fulfillment order previews based on shipping criteria that you specify.
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_GetFulfillmentPreview.html
+        """
+        raise NotImplementedError
+
+    def create_fulfillment_order(self):
+        """
+        Requests that Amazon ship items from the seller's inventory in Amazon's fulfillment network
+        to a destination address.
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_CreateFulfillmentOrder.html
+        """
+        raise NotImplementedError
+
+    def update_fulfillment_order(self):
+        """
+        Updates and/or requests shipment for a fulfillment order with an order hold on it.
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_UpdateFulfillmentOrder.html
+        """
+        raise NotImplementedError
+
+    def get_fulfillment_order(self, seller_fulfillment_order_id=None):
+        data = dict(
+            Action="GetFulfillmentOrder",
+            SellerFulfillmentOrderId=seller_fulfillment_order_id,
+        )
+        return self.make_request(data)
+
+    @utils.next_token_action("ListAllFulfillmentOrders")
+    def list_all_fulfillment_orders(self, next_token=None):
+        """
+        Returns a list of fulfillment orders fulfilled after (or at) a specified date.
+        Pass `next_token` to call "ListAllFulfillmentOrdersByNextToken" instead
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_ListAllFulfillmentOrders.html
+        """
+        raise NotImplementedError
+
+    def list_all_fulfillment_orders_by_next_token(self, token):
+        """
+        Alias for `list_all_fulfillment_orders(next_token=token)`.
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_ListAllFulfillmentOrdersByNextToken.html
+        """
+        raise NotImplementedError
+        # return self.list_all_fulfillment_orders(next_token=token)
+
+    def get_package_tracking_details(self, package_number=None):
+        data = dict(Action="GetPackageTrackingDetails", PackageNumber=package_number)
+        return self.make_request(data)
+
+    def cancel_fulfillment_order(self):
+        """
+        Requests that Amazon stop attempting to fulfill an existing fulfillment order.
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_CancelFulfillmentOrder.html
+        """
+        raise NotImplementedError
+
+    def list_return_reason_codes(self):
+        """
+        Returns a list of return reason codes for a seller SKU in a given marketplace.
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_ListReturnReasonCodes.html
+        """
+        raise NotImplementedError
+
+    def create_fulfillment_return(self):
+        """
+        Creates a fulfillment return.
+        Docs:
+        http://docs.developer.amazonservices.com/en_US/fba_outbound/FBAOutbound_CreateFulfillmentReturn.html
+        """
+        raise NotImplementedError
 
 
 class Recommendations(MWS):
